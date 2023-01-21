@@ -1,4 +1,6 @@
 # team-22
 ECE 461
 
-Hasan has a commit
+Team Members:
+
+1) Daniyal Fazal (daniyalfazal)
