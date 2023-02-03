@@ -67,7 +67,7 @@ class repositoryClass {
         owner: this.owner,
         repo: this.repo,
       });
-      this.licenses = vart.data.license.name;
+      this.licenses = vart.data.license.name; // fix if license does not exist
       let contributors = await octokit.request(
         `GET /repos/{owner}/{repo}/contributors`,
         {
@@ -77,7 +77,6 @@ class repositoryClass {
         }
       );
       contributors.data.forEach((value, index, array) => {
-        //console.log(value.contributions);
         this.contributions = value.contributions + this.contributions;
         this.numContributors = index;
       });
