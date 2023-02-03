@@ -8,3 +8,5 @@
 /dist
 /something.rs
 /dist
+/.npm
+/.pkg-cache
