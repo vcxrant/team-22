@@ -1,14 +1,24 @@
 import {averageFunction, validateUrl} from "./generalFunctions"
 import { Octokit } from "octokit";
+//import { Axios } from 'axios';
+import axios from "axios";
 require("dotenv").config();
 
 
 const secretKey: string = process.env.GITHUB;
+
+console.log(secretKey)
 const octokit = new Octokit({
   auth: secretKey,
 });
 
-
+const axios_instance = axios.create({
+  baseURL: 'https://api.github.com',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${secretKey}`
+  }
+});
 
 /* 
 License comparison to be done on another day
@@ -39,12 +49,15 @@ export class repositoryClass {
     }
   
     getRepoInfo = async () => {
-      if (validateUrl(this.url)) {
+      if (validateUrl(this.url)) 
+      {
         let vart = await octokit.request(`GET /repos/{owner}/{repo}/license`, {
           owner: this.owner,
           repo: this.repo,
         });
+
         this.licenses = vart.data.license.name; // fix if license does not exist
+
         let contributors = await octokit.request(
           `GET /repos/{owner}/{repo}/contributors`,
           {
@@ -53,19 +66,24 @@ export class repositoryClass {
             //anon: "1"
           }
         );
+
         contributors.data.forEach((value, index, array) => {
           this.contributions = value.contributions + this.contributions;
           this.numContributors = index;
         });
+
         this.numContributors++;
+
         const averageContributionrepo: number = averageFunction(
           this.numContributors,
           this.contributions
         );
+
         let sum = 0;
+
         contributors.data.every((value, index, array) => {
           sum += value.contributions;
-          console.log(array);
+          //console.log(array);
           if (sum <= averageContributionrepo) {
             return true;
           } else if (index == 0 && sum <= averageContributionrepo) {
@@ -76,8 +94,34 @@ export class repositoryClass {
             return false;
           }
         });
-        console.log(this.busFactor);
-      } else {
+
+        //console.log(this.busFactor);
+
+        //From here on below is the code that I added (Daniyal Fazal)
+
+        const query = 
+        `query 
+        {
+          repository(owner: this.owner, name: this.repo) 
+          {
+            name
+            description
+            stargazers 
+            {
+              totalCount
+            }
+          }
+        };`
+        
+        axios_instance.post('/graphql', {
+          query
+        })
+        .then(response => console.log(response.data))
+        .catch(error => console.error(error));
+
+      } 
+      else 
+      {
         // error handling for failing the validation stage
       }
     };
