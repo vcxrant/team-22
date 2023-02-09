@@ -1,0 +1,12 @@
+/node_modules
+/API
+/.env
+/Hasan
+/index.js
+/index.js.map
+/package-lock.json
+/dist
+/something.rs
+/dist
+/.npm
+/.pkg-cache

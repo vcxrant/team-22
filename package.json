@@ -1,0 +1,38 @@
+{
+  "name": "api",
+  "version": "0.1.0",
+  "description": "ECE 461",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hasansultan92/ECE461.git"
+  },
+  "author": "Hasan Sultan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hasansultan92/ECE461/issues"
+  },
+  "homepage": "https://github.com/hasansultan92/ECE461#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "typescript": "^4.9.4"
+  },
+  "pkg": {
+    "assets": [
+      "views/**/*"
+    ],
+    "output": "dist"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.3",
+    "npm-registry-client": "^8.6.0",
+    "octokit": "^1.7.0",
+    "pkg": "^5.8.0"
+  }
+}
