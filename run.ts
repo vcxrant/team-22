@@ -2,17 +2,29 @@
 //#!/usr/bin/env node
 
 import { execSync } from "child_process";
-const NpmRegistryClient = require("npm-registry-client");
 import * as fs from "fs";
-import * as dotenv from "dotenv";
+import {
+  log,
+  retrieveFunction,
+  retrieveFunctionLogFile,
+  validateUrl,
+} from "./modules/generalFunctions";
+import { repositoryClass } from "./modules/classes";
+const NpmRegistryClient = require("npm-registry-client");
+require("dotenv").config();
 
-dotenv.config();
-const logFilePath = process.env.LOG_FILE;
+const secretKey: any = retrieveFunction();
+const logFilePath: any = retrieveFunctionLogFile();
 
-const log = (message: string) => {
-  console.log(message);
-  fs.writeFileSync(logFilePath, `${message}\n`, { flag: "a" });
-};
+if (secretKey == undefined) {
+  log("Error: Missing github token");
+  process.exit(1);
+}
+
+if (logFilePath == undefined) {
+  log("Error: Missing log file path");
+  process.exit(1);
+}
 
 async function checkIfFilePath(input: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
@@ -47,7 +59,7 @@ function decomposeUrl(url: string): Promise<[string, string]> {
     return new Promise((resolve, reject) => {
       registry.get(url, params, (error: any, data: any) => {
         if (error) {
-          log(`Error retrieing repository information: ${error}`);
+          //log(`Error retrieing repository information: ${error}`);
           reject(error);
         } else {
           const repository = data.repository;
@@ -77,7 +89,7 @@ async function main() {
   const action = process.argv[2];
   if (action == "build") {
     try {
-        // this is wrong
+      // this is wrong
       execSync("npm install", { stdio: "inherit" });
     } catch (error) {
       log(`Error: ${error}`);
@@ -93,11 +105,22 @@ async function main() {
   } else if (await checkIfFilePath(action)) {
     const fileContent = fs.readFileSync(action, "utf-8");
     const urls = fileContent.split("\n");
+    console.log(urls[0]);
     // work here
-    for (const url of urls) {
+    if (validateUrl(urls[0])) {
+      const [random1, random2] = await decomposeUrl(urls[0]);
+      let repo = new repositoryClass(random2, urls[0], random1);
+      repo.getlicense();
+      repo.getRepoInfo();
+      //setTimeout(() => {}, 1000);
+      console.log(repo.printProperties());
+    } else {
+      //error message for invalid url
+    }
+    /* for (const url of urls) {
       const [org, repo] = await decomposeUrl(url);
       console.log(`Organization: ${org}, Repository: ${repo}`);
-    }
+    } */
   } else {
     console.log("Error: Incorrect input arguments");
   }
