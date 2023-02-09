@@ -97,7 +97,7 @@ export class repositoryClass {
       // const endpoint = "https://api.github.com/graphql";
       // const headers = {
       //   "content-type": "application/json",
-      //   "Authorization": `Bearer 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`
+      //   "Authorization": `Bearer ${secretKey}`
       // };
       // const graphqlQuery = {
       //     "query": `query {
