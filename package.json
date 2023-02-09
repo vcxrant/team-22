@@ -31,6 +31,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "dotenv": "^16.0.3",
+    "npm-registry-client": "^8.6.0",
     "octokit": "^1.7.0",
     "pkg": "^5.8.0"
   }
