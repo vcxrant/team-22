@@ -11,13 +11,13 @@ const octokit = new Octokit({
   auth: secretKey,
 });
 
-const axios_instance = axios.create({
-  baseURL: "https://api.github.com",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${secretKey}`,
-  },
-});
+// const axios_instance = axios.create({
+//   baseURL: "https://api.github.com",
+//   headers: {
+//     "Content-Type": "application/json",
+//     Authorization: `Bearer ${secretKey}`,
+//   },
+// });
 
 /* 
 License comparison to be done on another day
@@ -90,6 +90,67 @@ export class repositoryClass {
 
       //console.log(this.busFactor);
 
+      // AXIOS ATTEMPT (Riya)
+
+      // const axios = require("axios");
+
+      // const endpoint = "https://api.github.com/graphql";
+      // const headers = {
+      //   "content-type": "application/json",
+      //   "Authorization": `Bearer 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`
+      // };
+      // const graphqlQuery = {
+      //     "query": `query {
+      //       repository(owner: vcxrant, name: team-22) {
+      //         name
+      //         description
+      //         stargazers {
+      //           totalCount
+      //         }
+      //       }
+      //     }`,
+      //     "variables": {}
+      // };
+      
+      // const response = await axios({
+      //   url: endpoint,
+      //   method: 'post',
+      //   headers: headers,
+      //   data: graphqlQuery
+      // });
+      
+      // console.log(response.data); // data
+      // console.log(response.errors); // errors if any
+
+      // FETCH ATTEMPT (Riya)
+      const endpoint = "https://api.github.com/graphql";
+      const headers = {
+        "content-type": "application/json",
+          "Authorization": `Bearer ${secretKey}`
+      };
+      const graphqlQuery = {
+          "operationName": "fetchData",
+          "query": `query {
+            repository(owner: vcxrant, name: team-22) {
+              name
+              description
+            }
+          }`,
+          "variables": {}
+      };
+      
+      const options = {
+          "method": "POST",
+          "headers": headers,
+          "body": JSON.stringify(graphqlQuery)
+      };
+      
+      const response = await fetch(endpoint, options);
+      const data = await response.json();
+      
+      console.log(data.data); // data
+      console.log(data.errors); // errors if any
+
       //From here on below is the code that I added (Daniyal Fazal)
 
       const query = `query 
@@ -114,18 +175,18 @@ export class repositoryClass {
         })
         .catch((error) => console.error(error)); */
 
-  };
+  }; 
   printProperties() {
-    Promise.resolve(
-      console.log(
-        this.licenses,
-        this.busFactor,
-        this.url,
-        this.owner,
-        this.repo,
-        this.contributions,
-        this.numContributors
-      )
-    );
-  }
+    // Promise.resolve(
+    //   console.log(
+    //     this.licenses,
+    //     this.busFactor,
+    //     this.url,
+    //     this.owner,
+    //     this.repo,
+    //     this.contributions,
+    //     this.numContributors
+    //   )
+    // );
+  } 
 }
