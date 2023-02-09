@@ -4,14 +4,14 @@ EXEC = run
 HOME = ./
 MODULES = ./modules/
 FILESCOMPILE = $(MODULES)*
-STARTINGPOINT = $(MODULES)index
+STARTINGPOINT = run
 
 compile : clean
-	tsc $(FILESCOMPILE)
+	tsc $(STARTINGPOINT)
 	pkg $(STARTINGPOINT).js -o $(EXEC)
 
 exec: compile
-	./$(EXEC)
+	./$(EXEC) ./testfile
 	
 checkMem: $(EXEC)
 	valgrind --leak-check=full --show-leak-kinds=all -v --track-origins=yes ./$(EXEC) $(TESTDIR)500_500.b $(OUTDIR)500_500.t $(OUTDIR)500_500.f $(OUTDIR)500_500.p
