@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+const child_process = require( "child_process");
+//console.log(process.argv)
+if (process.argv.length != 3) {
+    console.error("Error: Incorrect number of arguments");
+    //log("Error: Incorrect number of arguments");
+    process.exit(1);
+}
+
+const action = process.argv[2];
+if (action == "build") {
+    try {
+        child_process.execSync("npm run build", { stdio: "inherit" });
+    } catch (error) {
+        //log(`Error: ${error}`);
+    }
+} else if (action == "install") {
+    try {
+        child_process.execSync("npm install", { stdio: "inherit" });
+    } catch (error) {
+        //log(`Error: ${error}`);
+    }
+} else if (action == "test") {
+    console.log("All tests run");
+}

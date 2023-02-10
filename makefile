@@ -1,10 +1,10 @@
 CFLAGS = -O3 -std=c99 -Wall -Wshadow -Wvla -pedantic
 LIBS = -lm
-EXEC = run
+EXEC = main
 HOME = ./
 MODULES = ./modules/
 FILESCOMPILE = $(MODULES)*
-STARTINGPOINT = run
+STARTINGPOINT = main
 
 compile : clean
 	tsc $(STARTINGPOINT)
@@ -20,7 +20,6 @@ install:
 	 npm install
 
 clean:
-	/bin/rm -f $(MODULES)*.js *nfs
-	/bin/rm -f $(HOME)*.js *nfs
-	/bin/rm -f $(HOME)*.map *nfs
-	/bin/rm -f $(HOME)$(EXEC) *nfs
+	/bin/rm -f $(MODULES)*.js $(MODULES)*.map *nfs
+	/bin/rm -f $(HOME)*.js $(HOME)*.map
+	/bin/rm -f $(HOME)$(EXEC)

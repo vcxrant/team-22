@@ -10,3 +10,7 @@
 /dist
 /.npm
 /.pkg-cache
+.vscode
+.VSCodeCounter
+testfile
+log
