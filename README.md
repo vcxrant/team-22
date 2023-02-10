@@ -5,8 +5,11 @@ Team Members:
 
 <img src="https://contrib.rocks/image?repo=varshney00/team-22" />
 1) Vickrant Sreekanth (vcxrant)
+
 2) Riya Varshney (varshney00)
+
 3) Hasan Sultan (hsultan)
+
 4) Daniyal Fazal (daniyalfazal)
 
 
