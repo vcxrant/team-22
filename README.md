@@ -1,4 +1,6 @@
 # team-22
+<img src="https://img.shields.io/github/contributors/varshney00/team-22" />    
+
 ### ECE 461
 <img src="https://img.shields.io/github/contributors/varshney00/team-22" />    
 
