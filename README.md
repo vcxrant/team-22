@@ -11,3 +11,9 @@
 
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=vcxrant" />
 <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+
+### Setup
+Run the following commands:
+```
+npm install
+```
