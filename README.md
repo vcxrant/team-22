@@ -1,5 +1,5 @@
 # team-22
-## ECE 461
+### ECE 461
 
 ### Team Members:
 
