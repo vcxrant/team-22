@@ -51,7 +51,7 @@ export const log = (message: string) => {
 };
 
 export const retrieveFunction = () => {
-  const token = process.env.GITHUB;
+  const token = process.env.GITHUB_TOKEN;
   return token;
 };
 
