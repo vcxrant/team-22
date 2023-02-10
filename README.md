@@ -30,10 +30,10 @@ https://github.com/cloudinary/cloudinary_npm
   
 ## Instructions
 Here is the format of a sample command: 
+(Be sure to specify the filepath specific to your list of URLs)
 ```
 ./run /Users/myUser/IdeaProjects/files/sample-url-file.txt
 ```
-(Be sure to specify the filepath specific to your list of URLs)
 
 The program will output a ranked list of modules and their metrics. It will look something like this:
 ```
