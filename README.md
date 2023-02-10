@@ -16,10 +16,13 @@ We have created a command-line interface that you can use to obtain a ranking of
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=vcxrant" />
 
 ## Setup
-Run the following commands:
+1. Clone this repository
+2. Run the following command:
 ```
 npm install
 ```
+3. Create a testfile (need more detail here)
+  
 ## Instructions
 Here is an example input for the CLI:
 ```
