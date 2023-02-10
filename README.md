@@ -10,9 +10,8 @@ We have created a command-line interface that you can use to obtain a ranking of
 1. Vickrant
 2. Riya
 3. Hasan
-4. Daniyal
-  
-  
+4. Daniyal <br />
+<br />
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=vcxrant" />
 
 ## Setup
