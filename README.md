@@ -29,7 +29,7 @@ https://github.com/cloudinary/cloudinary_npm
 4. Obtain a Github Token?
   
 ## Instructions
-Here is the format of a sample command: 
+Here is the format of a sample command:   
 (Be sure to specify the filepath specific to your list of URLs)
 ```
 ./run /Users/myUser/IdeaProjects/files/sample-url-file.txt
