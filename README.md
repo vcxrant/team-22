@@ -4,8 +4,8 @@ ECE 461
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=vcxrant" />
 <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
 
-![GitHub Contributors Image](https://contrib.rocks/image?repo=varshney00/team-22)
 <img src="https://contrib.rocks/image?repo=varshney00/team-22" />
+
 Team Members:
 
 1) Daniyal Fazal (daniyalfazal)
