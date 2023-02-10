@@ -4,7 +4,7 @@
 ### ECE 461
 
 ### Project Description
-We have created a command-line interface that you can use to obtain a ranking of npm modules in terms of trustworthiness. The solution implements REST and GraphQL APIs to query data from Github that we use in our algorithm to calculate and output the ranking of modules along with their ratings on various trustworthiness metrics.
+We have created a command-line interface that you can use to obtain a ranking of npm modules in terms of trustworthiness. The solution implements REST and GraphQL APIs to query data from Github which we use in our algorithm to calculate and output the ranking of modules and their ratings on various trustworthiness metrics.
 
 ### Team Members:
 
