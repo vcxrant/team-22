@@ -20,14 +20,17 @@ We have created a command-line interface that you can use to obtain a ranking of
 2. Run the following command:
 ```
 npm install
+./run install
 ```
 3. Create a testfile with the following content:
 ```
 https://github.com/cloudinary/cloudinary_npm
 ```
+4. Obtain a Github Token?
   
 ## Instructions
-Here is an example input for the CLI:
+Here is the format of a sample command: 
 ```
-code goes here
+./run /Users/myUser/IdeaProjects/files/sample-url-file.txt
 ```
+(Be sure to specify the filepath specific to your list of URLs)
