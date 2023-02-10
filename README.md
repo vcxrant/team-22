@@ -1,5 +1,5 @@
 # team-22
-<img src="https://contrib.rocks/image?repo=varshney00/team-22](https://img.shields.io/github/contributors/varshney00/team-22" />
+<img src="https://img.shields.io/github/contributors/varshney00/team-22" />
 ### ECE 461
 
 ### Project Description
