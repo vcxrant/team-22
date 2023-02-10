@@ -21,7 +21,10 @@ We have created a command-line interface that you can use to obtain a ranking of
 ```
 npm install
 ```
-3. Create a testfile (need more detail here)
+3. Create a testfile with the following content:
+```
+https://github.com/cloudinary/cloudinary_npm
+```
   
 ## Instructions
 Here is an example input for the CLI:
