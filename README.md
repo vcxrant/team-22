@@ -1,9 +1,8 @@
 # team-22
 ECE 461
 
-<img src="https://contrib.rocks/image?repo=varshney00/team-22" />
-
 Team Members:
+<img src="https://contrib.rocks/image?repo=varshney00/team-22" />
 
 1) Daniyal Fazal (daniyalfazal)
 2) Hasan Sultan (hsultan)
