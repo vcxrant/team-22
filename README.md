@@ -30,7 +30,7 @@ https://github.com/cloudinary/cloudinary_npm
   
 ## Instructions
 Here is the format of a sample command:   
-(Be sure to specify the filepath specific to your list of URLs)
+(Be sure to specify the file path specific to your list of URLs)
 ```
 ./run /Users/myUser/IdeaProjects/files/sample-url-file.txt
 ```
