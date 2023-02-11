@@ -1,12 +1,17 @@
 {
-  "name": "api",
-  "version": "0.1.0",
+  "name": "461",
+  "version": "1.0",
   "description": "ECE 461",
-  "main": "index.js",
-  "bin": "index.js",
+  "main": "main.js",
+  "bin": {
+    "run": "./run"
+  },
+  "keywords": [
+    "main"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc ./modules/main"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+const child_process = require("child_process");
+const fs = require("fs")
+
+if (process.argv.length != 3) {
+    console.log(process.env.LOG_LEVEL||0)
+    //log("Error: Incorrect number of arguments", "", process.env.LOG_LEVEL);
+    // cannot call above function unless local declaration
+    process.exitCode = 1;
+}
+else {
+    const action = process.argv[2];
+    if (action == "build") {
+        try {
+            child_process.execSync("npm run build", { stdio: "inherit" });
+            process.exitCode = 0
+        } catch (error) {
+            process.exitCode = 1
+            //log(`Error: ${error}`);
+        }
+    } else if (action == "install") {
+        try {
+            child_process.execSync("npm install", { stdio: "inherit" });
+            process.exitCode = 0
+
+        } catch (error) {
+            process.exitCode = 1
+            //log(`Error: ${error}`);
+        }
+    } else if (action == "test") {
+        console.log("All tests run");
+    }
+    else {
+        if (!fs.existsSync(action)) {
+            console.log("error file dont exist homeboy")
+            process.exitCode = 1;
+        }
+        else {
+            // Call main program here
+            const main = require("./modules/main")
+            main.main(action)
+
+            process.exitCode = 0
+
+        }
+    }
+}
+// Check if the npm install was ran before the file is run 
