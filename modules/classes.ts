@@ -19,9 +19,6 @@ const axios_instance = axios.create({
   },
 });
 
-/* 
-License comparison to be done on another day
-*/
 export class repositoryClass {
   licenses: Promise<number>;
   busFactor: number;
@@ -62,57 +59,33 @@ export class repositoryClass {
 
       contributors.data.forEach((value, index, array) => {
         this.contributions = value.contributions + this.contributions;
-        this.numContributors = index;
+        this.numContributors = index; //total contributors
       });
 
       this.numContributors++;
-
-      const averageContributionrepo: number = averageFunction(
-        this.numContributors,
-        this.contributions
-      );
-
+      
       let sum = 0;
+      let raw_busfactor = 0;
 
       contributors.data.every((value, index, array) => {
         sum += value.contributions;
-        //console.log(array);
-        if (sum <= averageContributionrepo) {
+        if (sum <= (this.contributions / 2)) {
           return true;
-        } else if (index == 0 && sum <= averageContributionrepo) {
-          this.busFactor = index + 1;
+        } else if (index == 0 && sum <= (this.contributions / 2)) {
+          raw_busfactor = index + 1;
           return false;
         } else {
-          this.busFactor = index + 1;
+          raw_busfactor = index + 1;
           return false;
         }
       });
 
-      //console.log(this.busFactor);
+      console.log(raw_busfactor);
 
-      //From here on below is the code that I added (Daniyal Fazal)
+      this.busFactor = (raw_busfactor - 1) / (this.numContributors - 1);
+      console.log(this.busFactor)
 
-      const query = `query 
-        {
-          repository(owner: this.owner, name: this.repo) 
-          {
-            name
-            description
-            stargazers 
-            {
-              totalCount
-            }
-          }
-        };`;
-
-      /* axios_instance
-        .post("/graphql", {
-          query,
-        })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => console.error(error)); */
+      //From here on below is the code for Graphql
 
   };
   printProperties() {
