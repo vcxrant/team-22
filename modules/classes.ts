@@ -62,24 +62,24 @@ export class repositoryClass {
 
       contributors.data.forEach((value, index, array) => {
         this.contributions = value.contributions + this.contributions;
-        this.numContributors = index;
+        this.numContributors = index; //total contributors
       });
 
       this.numContributors++;
 
-      const averageContributionrepo: number = averageFunction(
+      /*const averageContributionrepo: number = averageFunction(
         this.numContributors,
         this.contributions
-      );
+      );*/
 
       let sum = 0;
 
       contributors.data.every((value, index, array) => {
         sum += value.contributions;
         //console.log(array);
-        if (sum <= averageContributionrepo) {
+        if (sum <= (this.contributions / 2)) {
           return true;
-        } else if (index == 0 && sum <= averageContributionrepo) {
+        } else if (index == 0 && sum <= (this.contributions / 2)) {
           this.busFactor = index + 1;
           return false;
         } else {
@@ -88,7 +88,7 @@ export class repositoryClass {
         }
       });
 
-      //console.log(this.busFactor);
+      console.log(this.busFactor);
 
       //From here on below is the code that I added (Daniyal Fazal)
 
@@ -105,6 +105,7 @@ export class repositoryClass {
           }
         };`;
 
+        
       /* axios_instance
         .post("/graphql", {
           query,
