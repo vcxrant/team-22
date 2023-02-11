@@ -4,14 +4,14 @@
   "description": "ECE 461",
   "main": "main.js",
   "bin": {
-    "run": "./main.ts"
+    "run": "./run"
   },
   "keywords": [
     "main"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc main"
+    "build": "tsc ./modules/main"
   },
   "repository": {
     "type": "git",

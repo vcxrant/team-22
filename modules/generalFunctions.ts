@@ -29,7 +29,7 @@ const LicenseCompatible = [
   "BSD-3-Revised",
   "GPLv2",
   "LGPLv2.1",
-  "ISC"
+  "ISC",
 ];
 
 export const isLicenseCompatible = (org, repo): Promise<number> => {
@@ -45,9 +45,21 @@ export const isLicenseCompatible = (org, repo): Promise<number> => {
   });
 };
 
-export const log = (message: string) => {
-  console.log(message);
-  fs.writeFileSync(process.env.LOG_FILE, `${message}\n`, { flag: "a" });
+export const log = (message: string, messageFormal: string, code: number) => {
+  if (code == undefined) {
+    code = Number(process.env.LOG_LEVEL);
+  }
+  if (code == 0) {
+    return;
+  }
+  if (code == 1) {
+    console.log(message);
+    return;
+  }
+  if (code == 2) {
+    fs.writeFileSync(process.env.LOG_FILE, `${messageFormal}\n`, { flag: "a" });
+    return;
+  }
 };
 
 export const retrieveFunction = () => {
@@ -56,6 +68,8 @@ export const retrieveFunction = () => {
 };
 
 export const retrieveFunctionLogFile = () => {
-  const token = process.env.LOG_FILE;
-  return token;
+  const logFilePath = process.env.LOG_FILE;
+  const level = process.env.LOG_LEVEL || 0;
+  console.log(level);
+  return [logFilePath, level];
 };
