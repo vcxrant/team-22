@@ -42,53 +42,50 @@ export class repositoryClass {
     this.owner = owner;
     this.repo = repo;
     this.contributions = 0;
+    repositoryClass.all.push(this);
   }
   getlicense = async () => {
     this.licenses = isLicenseCompatible(this.owner, this.repo);
   };
   getRepoInfo = async () => {
-    
-      let contributors = await octokit.request(
-        `GET /repos/{owner}/{repo}/contributors`,
-        {
-          owner: this.owner,
-          repo: this.repo,
-          //anon: "1"
-        }
-      );
+    let contributors = await octokit.request(
+      `GET /repos/{owner}/{repo}/contributors`,
+      {
+        owner: this.owner,
+        repo: this.repo,
+        //anon: "1"
+      }
+    );
 
-      contributors.data.forEach((value, index, array) => {
-        this.contributions = value.contributions + this.contributions;
-        this.numContributors = index; //total contributors
-      });
+    contributors.data.forEach((value, index, array) => {
+      this.contributions = value.contributions + this.contributions;
+      this.numContributors = index; //total contributors
+    });
 
-      this.numContributors++;
-      
-      let sum = 0;
-      let raw_busfactor = 0;
+    this.numContributors++;
 
-      contributors.data.every((value, index, array) => {
-        sum += value.contributions;
-        if (sum <= (this.contributions / 2)) {
-          return true;
-        } else if (index == 0 && sum <= (this.contributions / 2)) {
-          raw_busfactor = index + 1;
-          return false;
-        } else {
-          raw_busfactor = index + 1;
-          return false;
-        }
-      });
+    let sum = 0;
+    let raw_busfactor = 0;
 
-      console.log(raw_busfactor);
+    contributors.data.every((value, index, array) => {
+      sum += value.contributions;
+      if (sum <= this.contributions / 2) {
+        return true;
+      } else if (index == 0 && sum <= this.contributions / 2) {
+        raw_busfactor = index + 1;
+        return false;
+      } else {
+        raw_busfactor = index + 1;
+        return false;
+      }
+    });
+    console.log(`Raw bus factor for ${this.url} is: ${raw_busfactor}`)
+    this.busFactor = (raw_busfactor - 1) / (this.numContributors - 1);
+    //console.log(this.busFactor);
 
-      this.busFactor = (raw_busfactor - 1) / (this.numContributors - 1);
-      console.log(this.busFactor)
-
-      //From here on below is the code for Graphql
-
+    //From here on below is the code for Graphql
   };
-  printProperties() {
+  printProperties():any{
     Promise.resolve(
       console.log(
         this.licenses,
@@ -100,5 +97,18 @@ export class repositoryClass {
         this.numContributors
       )
     );
-  }
+  };
+  /* destroy = function() {
+    var all = this.constructor.all;
+    if (all.indexOf(this) !== -1) {
+      all.splice(all.indexOf(this), 1);
+    }
+    delete this
+  }   */
+  
+  free(this) {
+    let i = repositoryClass.all.indexOf(this);
+    repositoryClass.all.splice(i, 1);
+  };
+  static all = new Array(); // Array of each version of this class
 }

@@ -13,9 +13,6 @@ compile : clean
 exec: compile
 	./$(EXEC) ./testfile
 	
-checkMem: $(EXEC)
-	valgrind --leak-check=full --show-leak-kinds=all -v --track-origins=yes ./$(EXEC) $(TESTDIR)500_500.b $(OUTDIR)500_500.t $(OUTDIR)500_500.f $(OUTDIR)500_500.p
-
 install:
 	 npm install
 

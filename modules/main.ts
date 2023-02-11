@@ -69,7 +69,6 @@ async function decomposeUrl(url: string): Promise<[string, string]> {
 export async function main(urlFile) {
   const fileContent = fs.readFileSync(urlFile, "utf-8");
   const urls = fileContent.split("\n");
-  console.log(urls);
   urls.forEach(async (value, index, array) => {
     if (validateUrl(value)) {
       const [random1, random2] = await decomposeUrl(value);
@@ -82,4 +81,7 @@ export async function main(urlFile) {
       log(`${value} is not a valid url`, "", logLevel)
     }
   });
+ setTimeout(()=>{
+  //console.log(repositoryClass.all)
+ },5000)
 }
