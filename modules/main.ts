@@ -66,7 +66,7 @@ async function decomposeUrl(url: string): Promise<[string, string]> {
   });
 }
 
-export async function main(urlFile) {
+export function main(urlFile: string) {
   const fileContent = fs.readFileSync(urlFile, "utf-8");
   const urls = fileContent.split("\n");
   urls.forEach(async (value, index, array) => {
@@ -75,13 +75,39 @@ export async function main(urlFile) {
       let repo = new repositoryClass(random2, value, random1);
       repo.getlicense();
       repo.getRepoInfo();
-      console.log(repo.printProperties());
     } else {
       // Fix the error log here
-      log(`${value} is not a valid url`, "", logLevel)
+      log(`${value} is not a valid url`, "", logLevel);
     }
   });
- setTimeout(()=>{
-  //console.log(repositoryClass.all)
- },5000)
+
+  setTimeout(() => {
+    console.log("Logging all the repo classes I have");
+    //console.log(repositoryClass.all);
+    //value.free();
+    try {
+      const repos = repositoryClass.all;
+      // Sort the repository Class first
+      repos.forEach(async(value, index, array) => {
+        //console.log(value);
+        await console.log({
+          URL: value.url,
+          NET_SCORE: 0.9,
+          RAMP_UP_SCORE: 0.5,
+          CORRECTNESS_SCORE: 0.7,
+          BUS_FACTOR_SCORE: value.busFactor,
+          RESPONSIVE_MAINTAINER_SCORE: 0.4,
+          LICENSE_SCORE: value.licenses,
+        });
+        await value.free()
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, 5);
+
+
+  //Print the ndjson
+
+  process.exitCode = 0;
 }

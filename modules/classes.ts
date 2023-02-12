@@ -79,25 +79,16 @@ export class repositoryClass {
         return false;
       }
     });
-    console.log(`Raw bus factor for ${this.url} is: ${raw_busfactor}`)
+    console.log(`Raw bus factor for ${this.url} is: ${raw_busfactor}`);
     this.busFactor = (raw_busfactor - 1) / (this.numContributors - 1);
     //console.log(this.busFactor);
 
     //From here on below is the code for Graphql
   };
-  printProperties():any{
-    Promise.resolve(
-      console.log(
-        this.licenses,
-        this.busFactor,
-        this.url,
-        this.owner,
-        this.repo,
-        this.contributions,
-        this.numContributors
-      )
-    );
-  };
+  printProperties(): any {
+    //serialize.write({ hello: this.licenses });
+  }
+
   /* destroy = function() {
     var all = this.constructor.all;
     if (all.indexOf(this) !== -1) {
@@ -105,10 +96,10 @@ export class repositoryClass {
     }
     delete this
   }   */
-  
-  free(this) {
+
+  free() {
     let i = repositoryClass.all.indexOf(this);
     repositoryClass.all.splice(i, 1);
-  };
+  }
   static all = new Array(); // Array of each version of this class
 }
