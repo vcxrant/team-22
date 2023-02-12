@@ -89,7 +89,151 @@ export class repositoryClass {
     //serialize.write({ hello: this.licenses });
   }
 
-  /* destroy = function() {
+  getResponsiveMaintainerScore = async () => {
+    const query = `{
+      repository(owner: "${this.owner}", name: "${this.repo}") {
+        name
+        stargazers {
+          totalCount
+        }
+        issues(last:100) {
+          totalCount
+          edges{
+            node {
+              createdAt
+              updatedAt
+              closedAt
+            }
+          }
+        }
+        pullRequests (last : 100) {
+          totalCount
+          edges {
+            node {
+              createdAt
+              updatedAt
+              closedAt
+            }
+          }
+        }
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              history {
+                totalCount
+              }
+              repository {
+                milestones {
+                  totalCount
+                }
+                pullRequests(states: CLOSED) {
+                  totalCount
+                }
+              }
+            }
+          }
+        }
+        forks {
+          totalCount
+        }
+        hasIssuesEnabled
+        hasVulnerabilityAlertsEnabled
+        watchers {
+          totalCount
+        }
+        discussions {
+          totalCount
+        }
+            releases {
+          totalCount
+        }
+        updatedAt
+        vulnerabilityAlerts {
+          totalCount
+        }
+        watchers {
+          totalCount
+        }
+      }
+      securityAdvisories {
+        totalCount
+      }
+      securityVulnerabilities {
+        totalCount
+      }
+    }`;
+
+    const response = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: {
+        Authorization: `Token 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`,
+      },
+      body: JSON.stringify({ query: query }),
+    });
+  
+    const result = (await response.json()).data;
+    const repository = result.repository;
+
+    let issuesResponseTime = 0;
+    for (const edge of repository.issues.edges) {
+      const issue = edge.node;
+      if (issue.closedAt) {
+        issuesResponseTime +=
+          (new Date(issue.closedAt).getTime() -
+            new Date(issue.createdAt).getTime()) /
+          1000;
+      } else {
+        issuesResponseTime +=
+          (new Date().getTime() - new Date(issue.createdAt).getTime()) / 1000;
+      }
+    }
+    issuesResponseTime /= repository.issues.totalCount;
+
+    let pullRequestsResponseTime = 0;
+    for (const edge of repository.pullRequests.edges) {
+      const pullRequest = edge.node;
+      if (pullRequest.closedAt) {
+        pullRequestsResponseTime +=
+          (new Date(pullRequest.closedAt).getTime() -
+            new Date(pullRequest.createdAt).getTime()) /
+          1000;
+      } else {
+        pullRequestsResponseTime +=
+          (new Date().getTime() - new Date(pullRequest.createdAt).getTime()) /
+          1000;
+      }
+    }
+    pullRequestsResponseTime /= repository.pullRequests.totalCount;
+
+    const maxIssuesResponseTime = 7 * 24 * 60 * 60;
+    const maxPullRequestsResponseTime = 14 * 24 * 60 * 60;
+  
+    const issuesResponseTimeScore = Math.min(
+      1,
+      Math.max(0, maxIssuesResponseTime / issuesResponseTime)
+    );
+  
+    const pullRequestsResponseTimeScore = Math.min(
+      1,
+      Math.max(0, maxPullRequestsResponseTime / pullRequestsResponseTime)
+    );
+  
+    const popularityScore =
+      0.5 * (Math.log10(repository.stargazers.totalCount + 1) / Math.log10(1000)) +
+      0.4 * (Math.log10(repository.forks.totalCount + 1) / Math.log10(1000)) +
+      0.1 * (Math.log10(repository.watchers.totalCount + 1) / Math.log10(1000));
+  
+    const score =
+      0.3 * issuesResponseTimeScore +
+      0.3 * pullRequestsResponseTimeScore +
+      0.4 * popularityScore;
+      
+      console.log(
+        "The maintainer score for the repository is:",
+        score
+      );
+    };  
+   /* destroy = function() {
     var all = this.constructor.all;
     if (all.indexOf(this) !== -1) {
       all.splice(all.indexOf(this), 1);
