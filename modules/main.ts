@@ -73,8 +73,7 @@ export async function main(urlFile: string) {
     if (validateUrl(url)) {
       const [owner, repository] = await decomposeUrl(url);
       let repo = new repositoryClass(repository, url, owner);
-      await repo.getlicense();
-      await repo.getRepoInfo(logLevel);
+      await repo.classMain(logLevel);
     } else {
       // Fix the error log here
       log(`${url} is not a valid url`, "", logLevel);
@@ -86,7 +85,9 @@ export async function main(urlFile: string) {
   let repos = repositoryClass.all;
 
   // Sort the repository Class first
-  repos.sort((repo, repo1) => {return repo.netScore - repo1.netScore}); // Make sure to sort by netscore from now
+  repos.sort((repo, repo1) => {
+    return repo.netScore - repo1.netScore;
+  }); // Make sure to sort by netscore from now
 
   // Print ndJson format
   repos.forEach((value, index, array) => {
@@ -100,7 +101,7 @@ export async function main(urlFile: string) {
       RESPONSIVE_MAINTAINER_SCORE: value.responsiveMaintainer,
       LICENSE_SCORE: value.licenses,
     });
-    value.free();
+    //value.free();
   });
 
   process.exitCode = 0;
