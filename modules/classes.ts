@@ -1,5 +1,4 @@
 import {
-  averageFunction,
   validateUrl,
   isLicenseCompatible,
   log,
@@ -211,7 +210,7 @@ export class repositoryClass {
       });
       
       const result = (await response.json()).data;
-      const repository = result.repository;
+      //const repository = result.repository;
       return result;
     } catch (error) {
       log(
