@@ -58,7 +58,7 @@ async function decomposeUrl(url: string): Promise<[string, string]> {
         });
     } else {
       log(
-        `Error: ${url} is invalid. The URL must from github or npmjs`,
+        `Error: ${url} is invalid. The URL must from ndjsonObject.free(); github or npmjs`,
         "",
         logLevel
       );
@@ -80,8 +80,6 @@ export async function main(urlFile: string) {
     }
   }
 
-  console.log("Logging all the repo classes I have");
-
   let repos = repositoryClass.all;
 
   // Sort the repository Class first
@@ -89,19 +87,22 @@ export async function main(urlFile: string) {
     return repo.netScore - repo1.netScore;
   }); // Make sure to sort by netscore from now
 
-  // Print ndJson format
+  const ndjsonObject: object[] = [];
   repos.forEach((value, index, array) => {
-    console.log(`Printing at Index ${index}`);
-    console.log({
-      URL: value.url,
-      NET_SCORE: value.netScore,
-      RAMP_UP_SCORE: value.rampUp,
-      CORRECTNESS_SCORE: value.CorrectNess,
-      BUS_FACTOR_SCORE: value.busFactor,
-      RESPONSIVE_MAINTAINER_SCORE: value.responsiveMaintainer,
-      LICENSE_SCORE: value.licenses,
-    });
-    //value.free();
+    const repo = {
+      "URL": value.url,
+      "NET_SCORE": value.netScore,
+      "RAMP_UP_SCORE": value.rampUp,
+      "CORRECTNESS_SCORE": value.CorrectNess,
+      "BUS_FACTOR_SCORE": value.busFactor,
+      "RESPONSIVE_MAINTAINER_SCORE": value.responsiveMaintainer,
+      "LICENSE_SCORE": value.licenses
+    }
+    ndjsonObject.push(repo);
+  })
+
+  ndjsonObject.forEach(obj => {
+    console.log(JSON.stringify(obj));
   });
 
   process.exitCode = 0;

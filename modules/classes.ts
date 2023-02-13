@@ -5,6 +5,7 @@ import {
   log,
   calcnetscore,
   calculateMaintainerScore,
+  calculateRepositoryCorrectness
 } from "./generalFunctions";
 import { Octokit } from "octokit";
 const fetch = require("node-fetch");
@@ -30,6 +31,7 @@ export class repositoryClass {
   repo: string;
   contributions: number = 0;
   numContributors: number = 0;
+  graphQLData : any;
 
   constructor(repo: string, url: string, owner: string) {
     this.url = url;
@@ -72,7 +74,6 @@ export class repositoryClass {
           return false;
         }
       });
-      console.log(`Raw bus factor for ${this.url} is: ${raw_busfactor}`);
       return (raw_busfactor - 1) / (this.numContributors - 1);
     } catch (error) {
       console.error("some Error occured in the Rest Api Function");
@@ -86,7 +87,9 @@ export class repositoryClass {
       this.busFactor = await this.getBusFactor(
         parseInt(process.env.LOG_LEVEL) || 0
       );
-      this.responsiveMaintainer = await this.getResponsiveMaintainerScore();
+      this.graphQLData = await this.getGraphQLRequest();
+      this.responsiveMaintainer = await this.getResponsiveMaintainerScore(this.graphQLData.repository);
+      this.CorrectNess = await this.getCorrectness(this.graphQLData);
       this.netScore = await calcnetscore(
         this.licenses,
         0,
@@ -109,7 +112,7 @@ export class repositoryClass {
 
   static all = new Array(); // Array of each version of this class
 
-  getResponsiveMaintainerScore = async (): Promise<number> => {
+  getGraphQLRequest = async (): Promise<any> => {
     try {
       const query = `{
         repository(owner: "${this.owner}", name: "${this.repo}") {
@@ -147,6 +150,9 @@ export class repositoryClass {
             totalCount
           }
           closedIssues: issues(states: CLOSED) {
+            totalCount
+          }
+          mergedPullRequests: pullRequests(states: MERGED) {
             totalCount
           }
           defaultBranchRef {
@@ -203,58 +209,65 @@ export class repositoryClass {
         },
         body: JSON.stringify({ query: query }),
       });
-
+      
       const result = (await response.json()).data;
       const repository = result.repository;
-
-      let issuesResponseTime = 0;
-      for (const edge of repository.issues.edges) {
-        const issue = edge.node;
-        if (issue.closedAt) {
-          issuesResponseTime +=
-            (new Date(issue.closedAt).getTime() -
-              new Date(issue.createdAt).getTime()) /
-            1000;
-        } else {
-          issuesResponseTime +=
-            (new Date().getTime() - new Date(issue.createdAt).getTime()) / 1000;
-        }
-      }
-      issuesResponseTime /= repository.issues.totalCount;
-
-      let pullRequestsResponseTime = 0;
-      for (const edge of repository.pullRequests.edges) {
-        const pullRequest = edge.node;
-        if (pullRequest.closedAt) {
-          pullRequestsResponseTime +=
-            (new Date(pullRequest.closedAt).getTime() -
-              new Date(pullRequest.createdAt).getTime()) /
-            1000;
-        } else {
-          pullRequestsResponseTime +=
-            (new Date().getTime() - new Date(pullRequest.createdAt).getTime()) /
-            1000;
-        }
-      }
-      pullRequestsResponseTime /= repository.pullRequests.totalCount;
-
-      const score = calculateMaintainerScore(
-        issuesResponseTime,
-        pullRequestsResponseTime,
-        repository.stargazers.totalCount,
-        repository.forks.totalCount,
-        repository.watchers.totalCount
-      );
-      console.log("The maintainer score for the repository is:", score);
-      return score;
+      return result;
     } catch (error) {
-      console.log(" I am at the reponsive maintainer function");
       log(
-        "I am at the reponsive maintainer function",
+        "GraphQL API request was not succesfull: ",
         error,
         parseInt(process.env.LOG_LEVEL)
       );
-      return 0;
+      return null;
     }
   };
+
+  getResponsiveMaintainerScore = async (repository : any) : Promise<number> => {
+    let issuesResponseTime = 0;
+    for (const edge of repository.issues.edges) {
+      const issue = edge.node;
+      if (issue.closedAt) {
+        issuesResponseTime +=
+          (new Date(issue.closedAt).getTime() -
+            new Date(issue.createdAt).getTime()) /
+          1000;
+      } else {
+        issuesResponseTime +=
+          (new Date().getTime() - new Date(issue.createdAt).getTime()) / 1000;
+      }
+    }
+    issuesResponseTime /= repository.issues.totalCount;
+
+    let pullRequestsResponseTime = 0;
+    for (const edge of repository.pullRequests.edges) {
+      const pullRequest = edge.node;
+      if (pullRequest.closedAt) {
+        pullRequestsResponseTime +=
+          (new Date(pullRequest.closedAt).getTime() -
+            new Date(pullRequest.createdAt).getTime()) /
+          1000;
+      } else {
+        pullRequestsResponseTime +=
+          (new Date().getTime() - new Date(pullRequest.createdAt).getTime()) /
+          1000;
+      }
+    }
+    pullRequestsResponseTime /= repository.pullRequests.totalCount;
+
+    const score = calculateMaintainerScore(
+      issuesResponseTime,
+      pullRequestsResponseTime,
+      repository.stargazers.totalCount,
+      repository.forks.totalCount,
+      repository.watchers.totalCount
+    );
+    return score;
+  };
+
+  getCorrectness = async (data : any) : Promise<number> => {
+    const score = calculateRepositoryCorrectness(data);
+    return score;
+  };
 }
+
