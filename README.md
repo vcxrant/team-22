@@ -14,7 +14,9 @@ We have created a command-line interface that you can use to obtain a ranking of
 3. Hasan
 4. Daniyal <br />
 <br />
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=vcxrant" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=vcxrant" />  
+  
+![proj summary](https://user-images.githubusercontent.com/70294347/218373668-5ff64d99-0e4f-4e37-81c8-e0f2719bd375.png)
 
 ## Setup
 1. Obtain a Github Token  
@@ -32,7 +34,7 @@ export GITHUB_TOKEN="{insert token here}"
 LOG_FILE = "./log"
 LOG_LEVEL = "2"
 ```
-5. Create a testfile with the following content:
+5. Optionally, create a testfile with the following content:
 ```
 https://github.com/cloudinary/cloudinary_npm
 ```
@@ -60,5 +62,5 @@ The program will output a ranked list of modules and their metrics. It will look
 
 To run the test scripts for this project, use the following command:
 ```
-./run testing
+./run test
 ```
