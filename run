@@ -49,8 +49,9 @@ else {
         }
     } else if (action == "test") {
         try {
-            child_process.execSync("npm run build && tsc ./modules/test && node ./modules/test",{stdio:"inherit"})
+            child_process.execSync("node ./modules/test",{stdio:"inherit"})
         } catch (error) {
+            console.log("Must build before running tests.")
             process.exit(1)
         }
     }
