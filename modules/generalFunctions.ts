@@ -76,7 +76,6 @@ export const retrieveFunction = (): any => {
 export const retrieveFunctionLogFile = () => {
   const logFilePath = process.env.LOG_FILE;
   const level = parseInt(process.env.LOG_LEVEL) || 0;
-  console.log(level);
   return [logFilePath, level];
 };
 
@@ -87,7 +86,7 @@ export const calcnetscore = async (
   responsiveMaintainer: number
 ): Promise<number> => {
   const score =
-    licenses + 0.2 * CorrectNess + 0.4 * busFactor + 0.4 * responsiveMaintainer;
+    licenses * (0.2 * CorrectNess + 0.4 * busFactor + 0.4 * responsiveMaintainer);
   return score;
 };
 
@@ -122,4 +121,25 @@ export function calculateMaintainerScore(
     0.4 * popularityScore;
 
   return score;
+}
+
+export function calculateRepositoryCorrectness(data : any) : number{
+
+  const totalIssues = data.repository.openIssues.totalCount + data.repository.closedIssues.totalCount;
+  const totalPullRequests = data.repository.pullRequests.totalCount;
+  // Normalize the metrics to values in the range [0, 1]
+  const normalizedOpenIssues = data.repository.openIssues.totalCount / totalIssues;
+  const normalizedClosedIssues = data.repository.closedIssues.totalCount / totalIssues;
+  const normalizedPullRequests = data.repository.closedPullRequest.totalCount / totalPullRequests;
+  const normalizedMergedPullRequests = data.repository.mergedPullRequests.totalCount / totalPullRequests;
+  const normalizedSecurityAdvisories = data.securityAdvisories.totalCount / (data.securityAdvisories.totalCount + data.repository.vulnerabilityAlerts.totalCount);
+  const normalizedVulnerabilities = data.repository.vulnerabilityAlerts.totalCount / (data.securityVulnerabilities.totalCount + data.repository.vulnerabilityAlerts.totalCount);
+  // Calculate the repository correctness score based on the normalized metrics
+  const issueCorrectness = normalizedClosedIssues / (normalizedOpenIssues + normalizedClosedIssues);
+  const pullRequestCorrectness =  normalizedPullRequests/normalizedMergedPullRequests;
+
+  const securityCorrectness = 1 - normalizedSecurityAdvisories - normalizedVulnerabilities;
+  const correctnessScore =
+    0.4 * issueCorrectness + 0.4 * pullRequestCorrectness + 0.2 * securityCorrectness;
+  return correctnessScore;
 }
