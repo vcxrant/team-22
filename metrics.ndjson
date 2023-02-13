@@ -1,0 +1,4 @@
+{"metric":"LICENSE", "api":"clone", "filepath":"modules/GeneralFunctions.ts", "line":52}
+{"metric":"RESPONSIVE_MAINTAINER_SCORE", "api":"graphql", "filepath":"modules/classes.ts", "line":226}
+{"metric":"CORRECTNESS_SCORE", "api":"graphql", "filepath":"src/rampup.py", "line":268}
+{"metric":"BUS_FACTOR_SCORE", "api":"rest", "filepath":"modules/classes.ts", "line":47}
