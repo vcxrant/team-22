@@ -48,11 +48,15 @@ else {
             process.exit(1)
         }
     } else if (action == "test") {
-        console.log("All tests run");
+        try {
+            child_process.execSync("npm run build && tsc ./modules/test && node ./modules/test",{stdio:"inherit"})
+        } catch (error) {
+            process.exit(1)
+        }
     }
     else {
         if (!fs.existsSync(action)) {
-        
+
             if (parseInt(process.env.LOG_LEVEL) == 1) {
                 console.error(`File does not exist at ${action}`)
             } else if (parseInt(process.env.LOG_LEVEL) == 2) {

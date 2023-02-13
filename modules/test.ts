@@ -1,3 +1,4 @@
+const child_process = require("child_process");
 import { validateUrl } from "./generalFunctions";
 import { retrieveFunction } from "./generalFunctions";
 import { retrieveFunctionLogFile } from "./generalFunctions";
@@ -193,42 +194,24 @@ function test_retrieveFunctionLogFile() {
   let passed = 0;
   let failed = 0;
 
-  oldLogFilePath = "/path/to/log/file.log";
-  const [logFilePath1, level1] = retrieveFunctionLogFile();
-    if(logFilePath1 === "/Users/hasansultan/Projects/ECE461/log")
-    {
-      passed++;
-    }
-    else
-    {
-      failed++;
-    }
-
+  child_process.execSync(`export LOG_LEVEL="2"`);
   const [logFilePath4, level4] = retrieveFunctionLogFile();
-    if(level4 === 2)
-    {
-      passed++;
-    }
-    else
-    {
-      failed++;
-    }
-
+  if (level4 === 2) {
+    passed++;
+  } else {
+    failed++;
+  }
 
   oldLogLevel = "invalid";
   delete process.env.LOG_LEVEL;
   const [logFilePath2, level2] = retrieveFunctionLogFile();
-    if(level2 === 0)
-    {
-      passed++;
-    }
-    else
-    {
-      failed++;
-    }
+  if (level2 === 0) {
+    passed++;
+  } else {
+    failed++;
+  }
 
-
-    return [passed, failed];
+  return [passed, failed];
 }
 
 const test_calcnetscore = async () => {
@@ -264,22 +247,22 @@ const test_calcnetscore = async () => {
       );
 
       if (result === expectedScore) {
-        /*console.log(
+        /* console.log(
           `Test case passed: licenses=${licenses}, CorrectNess=${CorrectNess}, busFactor=${busFactor}, responsiveMaintainer=${responsiveMaintainer}, expectedScore=${expectedScore}, result=${result}`
-        );*/
+        ); */
         numPassed++;
       } else {
-        /*console.error(
+        /* console.error(
           `Test case failed: licenses=${licenses}, CorrectNess=${CorrectNess}, busFactor=${busFactor}, responsiveMaintainer=${responsiveMaintainer}, expectedScore=${expectedScore}, result=${result}`
-        );*/
+        ); */
         numFailed++;
       }
     }
   );
 
-    const temp = [numPassed, numFailed];
-      
-    return temp;
+  const temp = [numPassed, numFailed];
+
+  return temp;
 };
 
 const test_calculateMaintainerScore = () => {
@@ -317,24 +300,23 @@ const test_calculateMaintainerScore = () => {
       );
 
       if (result === expectedScore) {
-        /*console.log(
+        /* console.log(
           `Test case passed: issuesResponseTime=${issuesResponseTime}, pullRequestsResponseTime=${pullRequestsResponseTime}, stars=${stars}, forks=${forks}, watchers=${watchers}, expectedScore=${expectedScore}, result=${result}`
-        );*/
+        ); */
         numPassed++;
       } else {
-        /*console.error(
+        /* console.error(
           `Test case failed: issuesResponseTime=${issuesResponseTime}, pullRequestsResponseTime=${pullRequestsResponseTime}, stars=${stars}, forks=${forks}, watchers=${watchers}, expectedScore=${expectedScore}, result=${result}`
-        );*/
+        ); */
         numFailed++;
       }
     }
   );
 
-  return [numPassed, numPassed];
+  return [numPassed, numFailed];
 };
 
 const main = async () => {
-
   let passed_test_validateUrl = 0;
   let failed_test_validateUrl = 0;
   let passed_retrieveFunction = 0;
@@ -346,25 +328,43 @@ const main = async () => {
   let passed_calcNetScore = 0;
   let failed_calcNetScore = 0;
   let total_passed_cases = 0;
-  let total_cases  = 0;
+  let total_cases = 0;
   let coverage = 0;
 
   [passed_test_validateUrl, failed_test_validateUrl] = test_validateUrl();
   [passed_retrieveFunction, failed_retrieveFunction] = test_retrieveFunction();
-  [passed_retrieveFunctionLogFile, failed_retrieveFunction] = test_retrieveFunctionLogFile();
-  [passed_calculateMaintainerScore, failed_calculateMaintainerScore] = test_calculateMaintainerScore();
+  [passed_retrieveFunctionLogFile, failed_retrieveFunction] =
+    test_retrieveFunctionLogFile();
+  [passed_calculateMaintainerScore, failed_calculateMaintainerScore] =
+    test_calculateMaintainerScore();
   [passed_calcNetScore, failed_calcNetScore] = await test_calcnetscore();
 
-  total_passed_cases = passed_test_validateUrl + passed_retrieveFunction + passed_retrieveFunctionLogFile + passed_calculateMaintainerScore + passed_calcNetScore;
-  total_cases = passed_test_validateUrl + passed_retrieveFunction + passed_retrieveFunctionLogFile + passed_calculateMaintainerScore + passed_calcNetScore + failed_test_validateUrl + failed_retrieveFunction + failed_retrieveFunctionLogFile + failed_calculateMaintainerScore + failed_calcNetScore;
+  total_passed_cases =
+    passed_test_validateUrl +
+    passed_retrieveFunction +
+    passed_retrieveFunctionLogFile +
+    passed_calculateMaintainerScore +
+    passed_calcNetScore;
+  total_cases =
+    passed_test_validateUrl +
+    passed_retrieveFunction +
+    passed_retrieveFunctionLogFile +
+    passed_calculateMaintainerScore +
+    passed_calcNetScore +
+    failed_test_validateUrl +
+    failed_retrieveFunction +
+    failed_retrieveFunctionLogFile +
+    failed_calculateMaintainerScore +
+    failed_calcNetScore;
 
   coverage = (total_passed_cases / total_cases) * 100;
 
   console.log("Total:", total_cases);
   console.log("Passed:", total_passed_cases);
-  console.log("Coverage:", coverage, "%" );
-  console.log(total_passed_cases, "/", total_cases, "passed. ", coverage, "% coverage achieved");
-
+  console.log("Coverage:", coverage, "%");
+  console.log(
+    `${total_passed_cases}/${total_cases} passed \n${coverage} % coverage achieved`
+  );
 };
 
-main()
+main();
