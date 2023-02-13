@@ -1,5 +1,4 @@
 import {
-  averageFunction,
   validateUrl,
   isLicenseCompatible,
   log,
