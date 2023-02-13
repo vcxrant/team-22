@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 const child_process = require("child_process");
-const fs = require("fs")
+const fs = require("fs");
 
 if (process.argv.length != 3) {
-    console.log(process.env.LOG_LEVEL||0)
-    //log("Error: Incorrect number of arguments", "", process.env.LOG_LEVEL);
-    // cannot call above function unless local declaration
+    if (parseInt(process.env.LOG_LEVEL) == 1) {
+        console.log("Not enough arguments to start the program")
+    } else if (parseInt(process.env.LOG_LEVEL) == 2) {
+        fs.writeFileSync(process.env.LOG_FILE, `Error! There are not enough arguments to run this program: ${process.argv.length}\n`, { flag: "a" });
+    }
     process.exitCode = 1;
 }
+
 else {
     const action = process.argv[2];
     if (action == "build") {
@@ -15,31 +18,52 @@ else {
             child_process.execSync("npm run build", { stdio: "inherit" });
             process.exitCode = 0
         } catch (error) {
+            if (parseInt(process.env.LOG_LEVEL) == 1) {
+                console.error(error)
+            } else if (parseInt(process.env.LOG_LEVEL) == 2) {
+                fs.writeFileSync(process.env.LOG_FILE, `${error}\n`, { flag: "a" });
+            }
             process.exitCode = 1
-            //log(`Error: ${error}`);
         }
     } else if (action == "install") {
+        let terminal;
         try {
-            child_process.execSync("npm install", { stdio: "inherit" });
-            process.exitCode = 0
-
+            terminal = child_process.execSync(`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash \
+            && export NVM_DIR="$HOME/.nvm" \
+            && [ -s "$NVM_DIR/nvm.sh" ] \
+            && \. "$NVM_DIR/nvm.sh" \
+            && [ -s "$NVM_DIR/bash_completion" ] \
+            && \. "$NVM_DIR/bash_completion" \
+            && nvm install v18.7.0 \
+            && nvm use v18.7.0 \
+            && npm install`, { stdio: "inherit" });
+            process.exit(0)
         } catch (error) {
-            process.exitCode = 1
-            //log(`Error: ${error}`);
+            terminal = error.stdout
+            if (parseInt(process.env.LOG_LEVEL) == 1) {
+                console.error(error)
+            } else if (parseInt(process.env.LOG_LEVEL) == 2) {
+                fs.writeFileSync(process.env.LOG_FILE, `${error}\n`, { flag: "a" });
+            }
+            process.exit(1)
         }
     } else if (action == "test") {
         console.log("All tests run");
     }
     else {
         if (!fs.existsSync(action)) {
-            console.log("error file dont exist homeboy")
+        
+            if (parseInt(process.env.LOG_LEVEL) == 1) {
+                console.error(`File does not exist at ${action}`)
+            } else if (parseInt(process.env.LOG_LEVEL) == 2) {
+                fs.writeFileSync(process.env.LOG_FILE, `Error! File does not exist at ${action}\n`, { flag: "a" });
+            }
             process.exitCode = 1;
         }
         else {
             // Call main program here
             const main = require("./modules/main")
             main.main(action)
-
             process.exitCode = 0
 
         }
