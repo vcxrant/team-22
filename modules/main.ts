@@ -66,20 +66,43 @@ async function decomposeUrl(url: string): Promise<[string, string]> {
   });
 }
 
-export async function main(urlFile) {
+export async function main(urlFile: string) {
   const fileContent = fs.readFileSync(urlFile, "utf-8");
-  const urls = fileContent.split("\n");
-  console.log(urls);
-  urls.forEach(async (value, index, array) => {
-    if (validateUrl(value)) {
-      const [random1, random2] = await decomposeUrl(value);
-      let repo = new repositoryClass(random2, value, random1);
-      repo.getlicense();
-      repo.getRepoInfo();
-      console.log(repo.printProperties());
+  const urls: string[] = fileContent.split("\n");
+  for (const url of urls) {
+    if (validateUrl(url)) {
+      const [owner, repository] = await decomposeUrl(url);
+      let repo = new repositoryClass(repository, url, owner);
+      await repo.classMain(logLevel);
     } else {
       // Fix the error log here
-      log(`${value} is not a valid url`, "", logLevel)
+      log(`${url} is not a valid url`, "", logLevel);
     }
+  }
+
+  console.log("Logging all the repo classes I have");
+
+  let repos = repositoryClass.all;
+
+  // Sort the repository Class first
+  repos.sort((repo, repo1) => {
+    return repo.netScore - repo1.netScore;
+  }); // Make sure to sort by netscore from now
+
+  // Print ndJson format
+  repos.forEach((value, index, array) => {
+    console.log(`Printing at Index ${index}`);
+    console.log({
+      URL: value.url,
+      NET_SCORE: value.netScore,
+      RAMP_UP_SCORE: value.rampUp,
+      CORRECTNESS_SCORE: value.CorrectNess,
+      BUS_FACTOR_SCORE: value.busFactor,
+      RESPONSIVE_MAINTAINER_SCORE: value.responsiveMaintainer,
+      LICENSE_SCORE: value.licenses,
+    });
+    //value.free();
   });
+
+  process.exitCode = 0;
 }
